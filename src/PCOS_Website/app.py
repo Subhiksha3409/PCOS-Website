@@ -1,4 +1,6 @@
+import sys
 import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from flask import Flask, request, render_template, redirect, url_for
 from werkzeug.utils import secure_filename
 from predict import predict_image  # Import the function from predict.py
