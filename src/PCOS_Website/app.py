@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, render_template, redirect, url_for
 from werkzeug.utils import secure_filename
-from predict import predict_image  # Import the function from predict.py
+from .predict import predict_image  # Import the function from predict.py
 
 # Initialize Flask app
 app = Flask(__name__)
