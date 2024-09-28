@@ -31,28 +31,32 @@ def validate_image_size(image_path, max_size=(1024, 1024)):
 def index():
     return render_template('index.html')
 
-# Route to handle file upload and prediction
+# Updated route to handle file upload and prediction
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
-        return redirect(request.url)
+        return "No file part", 400
 
     file = request.files['file']
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(filepath)
+        try:
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
 
-        # Validate and resize the image if necessary
-        validate_image_size(filepath)
+            # Validate and resize the image if necessary
+            validate_image_size(filepath)
 
-        # Make a prediction on the uploaded image
-        label, confidence = predict_image(filepath)
+            # Make a prediction on the uploaded image
+            label, confidence = predict_image(filepath)
 
-        # Pass label, confidence, and filename to the result page
-        return render_template('result.html', label=label, confidence=confidence, image_filename=filename)
+            return render_template('result.html', label=label, confidence=confidence, image_filename=filename)
 
-    return redirect(request.url)
+        except Exception as e:
+            logging.error(f"Error during prediction: {e}")
+            return "Error processing the image", 500
+
+    return "Invalid file", 400
 
 # Route to serve the result page
 @app.route('/result/<filename>')
