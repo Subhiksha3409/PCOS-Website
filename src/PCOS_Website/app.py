@@ -2,7 +2,7 @@ import logging
 from flask import Flask, request, render_template, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
-from predict import predict_image  # Import the function from predict.py
+from .predict import predict_image  # Import the function from predict.py
 from PIL import Image  # Import Image from PIL
 
 # Initialize Flask app
