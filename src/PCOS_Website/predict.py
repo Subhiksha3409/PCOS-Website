@@ -22,24 +22,26 @@ transform = transforms.Compose([
 ])
 
 def predict_image(image_path):
+    logging.info(f"Predicting for image: {image_path}")
+    
     # Open the image and apply preprocessing
-    image = Image.open(image_path).convert('RGB')  # Ensure it's in RGB format
-    image = transform(image).unsqueeze(0)  # Apply transformations and add batch dimension
-    image = image.to(device)  # Move the image to the same device as the model
+    image = Image.open(image_path).convert('RGB')
+    image = transform(image).unsqueeze(0)
+    image = image.to(device)
 
     # Get model outputs
-    with torch.no_grad():  # Disable gradient calculation for inference
+    with torch.no_grad():
         outputs = model(image)
-    
-    probabilities = torch.softmax(outputs, dim=1)  # Get probabilities
-    confidence, predicted_label = torch.max(probabilities, 1)  # Get confidence and predicted label
+
+    probabilities = torch.softmax(outputs, dim=1)
+    confidence, predicted_label = torch.max(probabilities, 1)
 
     # Mapping label indices to actual class labels
     labels = ['Non-PCOS', 'PCOS']
-    label = labels[predicted_label.item()]  # Convert index to label
+    label = labels[predicted_label.item()]
 
-    print(f"Label: {label}, Confidence: {confidence.item()}")  # Debug log
-
+    logging.info(f"Label: {label}, Confidence: {confidence.item()}")
     return label, confidence.item()
+
 
 
