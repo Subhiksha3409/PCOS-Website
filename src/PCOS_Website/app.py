@@ -3,6 +3,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 import sys
 import os
+from PIL import Image  # Make sure to import the PIL Image module
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from flask import Flask, request, render_template, redirect, url_for
 from werkzeug.utils import secure_filename
@@ -21,6 +22,13 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp', 'tiff'}
 # Function to check allowed file extensions
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Function to validate and resize the image if necessary
+def validate_image_size(image_path, max_size=(1024, 1024)):
+    with Image.open(image_path) as img:
+        if img.size > max_size:
+            img.thumbnail(max_size)
+            img.save(image_path)
 
 # Route for the homepage (upload form)
 @app.route('/')
