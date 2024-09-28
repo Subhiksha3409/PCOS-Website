@@ -1,9 +1,18 @@
-import logging
+import sys
+import os
+
+# Add the current directory to the Python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from flask import Flask, request, render_template, redirect, url_for
 from werkzeug.utils import secure_filename
-import os
-from .predict import predict_image  # Import the function from predict.py
-from PIL import Image  # Import Image from PIL
+import logging
+from PIL import Image  # Ensure PIL is imported
+
+from predict import predict_image  # Import the function from predict.py
+
+# Rest of your code...
+
 
 # Initialize Flask app
 app = Flask(__name__)
