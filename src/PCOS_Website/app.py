@@ -1,12 +1,9 @@
 import logging
-logging.basicConfig(level=logging.DEBUG)
-
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from flask import Flask, request, render_template, redirect, url_for
 from werkzeug.utils import secure_filename
+import os
 from predict import predict_image  # Import the function from predict.py
+from PIL import Image  # Import Image from PIL
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -21,6 +18,13 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'bmp', 'tiff'}
 # Function to check allowed file extensions
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Function to validate and resize image if necessary
+def validate_image_size(image_path, max_size=(1024, 1024)):
+    with Image.open(image_path) as img:
+        if img.size > max_size:
+            img.thumbnail(max_size)
+            img.save(image_path)
 
 # Route for the homepage (upload form)
 @app.route('/')
@@ -39,6 +43,9 @@ def upload_file():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
 
+        # Validate and resize the image if necessary
+        validate_image_size(filepath)
+
         # Make a prediction on the uploaded image
         label, confidence = predict_image(filepath)
 
@@ -54,4 +61,3 @@ def display_result(filename):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=False)
-
