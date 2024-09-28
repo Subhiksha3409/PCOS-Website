@@ -38,6 +38,8 @@ def predict_image(image_path):
     labels = ['Non-PCOS', 'PCOS']
     label = labels[predicted_label.item()]  # Convert index to label
 
-    # Return label and confidence score (Make sure to return exactly two values)
+    print(f"Label: {label}, Confidence: {confidence.item()}")  # Debug log
+
     return label, confidence.item()
+
 
