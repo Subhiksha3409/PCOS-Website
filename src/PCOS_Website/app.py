@@ -1,5 +1,6 @@
 import logging
-logging.basicConfig(level=logging.DEBUG)
+import traceback
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 import sys
 import os
@@ -57,7 +58,7 @@ def upload_file():
             return render_template('result.html', label=label, confidence=confidence, image_filename=filename)
 
         except Exception as e:
-            logging.error(f"Error during prediction: {e}")  # Log the actual error message
+            logging.error(f"Error during prediction: {e}\n{traceback.format_exc()}")  # Log the error with traceback
             return f"Error processing the image: {str(e)}", 500  # Return detailed error message
 
     return "Invalid file", 400
