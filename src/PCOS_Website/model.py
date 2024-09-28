@@ -18,3 +18,12 @@ class SimpleCNN(nn.Module):
         x = self.fc2(x)
         return x
 
+def load_model(model_path):
+    model = SimpleCNN()
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model.load_state_dict(torch.load(model_path, map_location=device))
+    model.to(device)
+    model.eval()
+    return model
+
+
