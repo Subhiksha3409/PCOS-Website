@@ -5,8 +5,20 @@ import os
 import logging
 from model import load_model  # Import the load_model function
 
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 # Path to the model you want to use for predictions
-MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model', 'src/PCOS_Website/model/train_97.94_accuracy_validation_99.57_accuracy_test_99.57_accuracy.pth')  # Change 'your_model.pth' to your actual model file name
+# Ensure the correct model path is provided here
+MODEL_DIR = os.path.join(os.path.dirname(__file__), 'model')  # Change this if needed
+MODEL_FILENAME = 'train_97.94_accuracy_validation_99.57_accuracy_test_99.57_accuracy.pth'
+MODEL_PATH = os.path.join(MODEL_DIR, MODEL_FILENAME)
+
+# Check if the model path exists for debugging
+if not os.path.exists(MODEL_PATH):
+    logging.error(f"Model file not found at {MODEL_PATH}. Please check the path.")
+else:
+    logging.info(f"Model loaded from {MODEL_PATH}")
 
 # Load the model
 model = load_model(MODEL_PATH)
@@ -20,7 +32,7 @@ transform = transforms.Compose([
 
 def predict_image(image_path):
     logging.info(f"Predicting for image: {image_path}")
-    
+
     # Open the image and apply preprocessing
     image = Image.open(image_path).convert('RGB')
     image = transform(image).unsqueeze(0)  # Add batch dimension
@@ -38,3 +50,4 @@ def predict_image(image_path):
 
     logging.info(f"Label: {label}, Confidence: {confidence.item()}")
     return label, confidence.item()
+
