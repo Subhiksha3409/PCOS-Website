@@ -5,7 +5,7 @@ import os
 from model import SimpleCNN  # Import the SimpleCNN architecture
 
 # Load your trained CNN model (update the path to your saved model file)
-MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model', 'pcos_classification_model.pth')
+MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model', 'train_99_accuracy.pth')
 
 # Initialize the model
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
